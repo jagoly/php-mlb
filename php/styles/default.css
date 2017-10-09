@@ -1,0 +1,120 @@
+html
+{
+  min-width: 480px;
+  width:     100%;
+  
+  box-sizing:  border-box;
+  font-family: ubuntu;
+}
+
+*, *::before, *::after
+{
+  margin:  0;
+  padding: 0;
+  border:  0;
+  
+  box-sizing: inherit;
+}
+
+body
+{
+  background-color: #C9B;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header
+{
+  background: #EBD;
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+header > #HeaderMain
+{
+  text-align: center;
+}
+
+footer
+{
+  background: #EBD;
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+footer > #FooterMain
+{
+  text-align: center;
+}
+
+#Content
+{
+  background: #EBD;
+  width: 1200;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+}
+
+#Content h1
+{
+    font-size: 1.5rem;
+    margin: 1.25rem 0;
+}
+
+#Content h2
+{
+    font-size: 1.25rem;
+    margin: 1.125rem 0;
+}
+
+#Content h3, #Content p
+{
+    font-size: 1rem;
+    margin: 1rem 0;
+}
+
+.QueryForm
+{
+  border: 1px solid black;
+  padding: 6px;
+  width: 300px;
+}
+
+.QueryForm > label
+{
+  float: right;
+  margin-bottom: 6px;
+}
+
+.QueryForm > label > input
+{
+  border: 1px solid black;
+  padding: 4px;
+  width: 200px;
+}
+
+.QueryForm > button
+{
+  border: 1px solid black;
+  display: block;
+  padding: 4px;
+  width: 100%;
+}
+
+.ResultTable
+{
+  background: white;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.ResultTable td, .ResultTable th
+{
+  border: 1px solid black;
+  padding: 4px;
+  margin: 0;
+}
