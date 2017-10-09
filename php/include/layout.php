@@ -26,7 +26,7 @@ echo <<<ENDSTR
 
 <header>
   <div id=HeaderMain>
-	  <h1>$title</h1>
+    <h1>$title</h1>
   </div>
 </header>
 
@@ -43,7 +43,7 @@ echo <<<ENDSTR
 
 <footer>
   <div id=FooterMain>
-	  <p>footer stuff goes here</p>
+    <p>footer stuff goes here</p>
   </div>
 </footer>
 

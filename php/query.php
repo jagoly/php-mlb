@@ -16,7 +16,7 @@ require('include/layout.php');
 
   <form class=QueryForm action="results.php" method="POST">
 
-	<label> Last Name <input type="text" name="LastName"> </label>
+    <label> Last Name <input type="text" name="LastName"> </label>
     <label> First Name <input type="text" name="FirstName"> </label>
     <label> Address <input type="text" name="Address"> </label>
 
