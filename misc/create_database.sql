@@ -106,6 +106,27 @@ CREATE TABLE `Purchases`
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `Workshops`
+(
+  `WorkshopID` int(8) NOT NULL AUTO_INCREMENT,
+  `ProductID` int(8) NOT NULL,
+  `WorkshopDate` date NOT NULL,
+  PRIMARY KEY (`WorkshopID`),
+  CONSTRAINT `Workshops_Products_FK` FOREIGN KEY (`ProductID`) REFERENCES `Products` (`ProductID`)
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `Grades`
+(
+  `WorkshopID` int(8) NOT NULL AUTO_INCREMENT,
+  `CustomerID` int(8) NOT NULL,
+  `Grade` varchar(30) NOT NULL,
+  PRIMARY KEY (`WorkshopID`, `CustomerID`),
+  CONSTRAINT `Grades_Workshops_FK` FOREIGN KEY (`WorkshopID`) REFERENCES `Workshops` (`WorkshopID`),
+  CONSTRAINT `Grades_Customers_FK` FOREIGN KEY (`CustomerID`) REFERENCES `Customers` (`CustomerID`)
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*============================================================================*/
 
 insert into Customers ( CustomerID, LastName, FirstName, Address ) values ( default, 'Burgle', 'Gloria', 'Eden Valley' );
@@ -131,3 +152,7 @@ insert into Shifts ( EmployeeID, ShiftDate, NumHours ) values ( 1, '2011-05-08',
 insert into Appointments ( CustomerID, EmployeeID, AppointmentDate, Outcome ) values ( 2, 1, '2011-04-12', 'Nothing of interest.' );
 insert into Appointments ( CustomerID, EmployeeID, AppointmentDate, Outcome ) values ( 3, 1, '2011-04-12', 'Lots of interesting things.' );
 
+insert into Products ( ProductID, VendorCode, ShortName, StandardPrice ) values ( default, 'MLB-FOO-1', 'Aardvarks and You', 19.95 );
+insert into Products ( ProductID, VendorCode, ShortName, StandardPrice ) values ( default, '0-399-22690-7', 'The Very Hungry Caterlillar', 19.95 );
+
+insert into Workshops ( WorkshopID, ProductID, WorkshopDate ) values ( default, 1, '2011-06-25' );
