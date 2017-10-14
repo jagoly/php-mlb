@@ -22,39 +22,97 @@ function jg_new_database_connection()
 
 //----------------------------------------------------------------------------//
 
-function jg_database_insert_helper(String $table, Array $fields, Array $values)
+function jg_database_insert_helper(String $table, Array $fields, Array $args)
 {
+    foreach ($args as $key => $value)
+        if ($value == '') $args[$key] = NULL;
+
     try
     {
-        $args = array_map(function(String $key) use($values) {
-            if (array_key_exists($key, $values)) return $values[$key];
-            throw new OutOfBoundsException("no value found for key '$key'");
-        }, $fields);
+        foreach ($fields as $field)
+        {
+            if (array_key_exists($field, $args)) continue;
+            throw new OutOfBoundsException("missing arg for '$field'");
+        }
 
         $strNames = join(', ', $fields);
         $strArgs = ':' . join(', :', $fields);
 
         $sql = "INSERT INTO $table ( $strNames ) VALUES ( $strArgs )";
-        echo $sql;
 
         $db = jg_new_database_connection();
-
         ( $statement = $db->prepare($sql) ) -> execute($args);
 
         return $statement->rowCount();
     }
 
-    catch (PDOException $e)
+    catch (PDOException $e) { jg_log_exception($e); return 0; }
+
+    catch (Exception $e) { jg_log_exception($e); return -1; }
+}
+
+//----------------------------------------------------------------------------//
+
+function jg_database_delete_helper(String $table, Array $fields, Array $args)
+{
+    foreach ($args as $key => $value)
+        if ($value == '') $args[$key] = NULL;
+
+    try
     {
-        jg_log_exception($e);
-        return 0;
+        $clauses = array_map(function($field) use($args) {
+            if (array_key_exists($field, $args)) return "$field = :$field";
+            throw new OutOfBoundsException("missing arg for '$field'");
+        }, $fields);
+
+        $strClauses = join(' AND ', $clauses);
+
+        $sql = "DELETE FROM $table WHERE $strClauses";
+
+        $db = jg_new_database_connection();
+        ( $statement = $db->prepare($sql) ) -> execute($args);
+
+        return $statement->rowCount();
     }
 
-    catch (Exception $e)
+    catch (PDOException $e) { jg_log_exception($e); return 0; }
+
+    catch (Exception $e) { jg_log_exception($e); return -1; }
+}
+
+//----------------------------------------------------------------------------//
+
+function jg_database_update_helper(String $table, Array $setFields, Array $whereFields, Array $args)
+{
+    foreach ($args as $key => $value)
+        if ($value == '') $args[$key] = NULL;
+
+    try
     {
-        jg_log_exception($e);
-        return -1;
+        $setClauses = array_map(function($field) use($args) {
+            if (array_key_exists($field, $args)) return "$field = :$field";
+            throw new OutOfBoundsException("missing arg for '$field'");
+        }, $setFields);
+
+        $whereClauses = array_map(function($field) use($args) {
+            if (array_key_exists($field, $args)) return "$field = :$field";
+            throw new OutOfBoundsException("missing arg for '$field'");
+        }, $whereFields);
+
+        $strSetClauses = join(', ', $setClauses);
+        $strWhereClauses = join(' AND ', $whereClauses);
+
+        $sql = "UPDATE $table SET $strSetClauses WHERE $strWhereClauses";
+
+        $db = jg_new_database_connection();
+        ( $statement = $db->prepare($sql) ) -> execute($args);
+
+        return $statement->rowCount();
     }
+
+    catch (PDOException $e) { jg_log_exception($e); return 0; }
+
+    catch (Exception $e) { jg_log_exception($e); return -1; }
 }
 
 //----------------------------------------------------------------------------//

@@ -24,8 +24,6 @@ header, footer, #Content
   background: #728;
 }
 
-/*----------------------------------------------------------------------------*/
-
 body
 {
   background: #C9B;
@@ -33,6 +31,8 @@ body
   flex-direction: column;
   min-height: 100vh;
 }
+
+/*----------------------------------------------------------------------------*/
 
 header
 {
@@ -66,8 +66,8 @@ header
 #HeaderNavigation > nav > a
 {
   color: white;
-  transition: background 0.2s;
   background: #C58;
+  transition: background 0.2s;
   font-weight: bold;
   text-decoration: none;
   text-align: right;
@@ -87,10 +87,7 @@ header
   background: #D69;
 }
 
-.NavMenuRootLayout > .NavMenuItem { margin-right: 6px; }
-
-.NavMenuGroupLayout > .NavMenuItem { margin-top: 6px; }
-
+/*----------------------------------------------------------------------------*/
 
 footer
 {
@@ -99,6 +96,8 @@ footer
   padding: 15px;
   text-align: center;
 }
+
+/*----------------------------------------------------------------------------*/
 
 #Content
 {
@@ -131,6 +130,7 @@ footer
 
 .BasicForm
 {
+  background: #ECD;
   border: 1px solid black;
   display: inline-block;
   padding: 0.5rem;
@@ -149,22 +149,30 @@ footer
 {
   display: block;
   margin-bottom: 0.5rem;
+  margin-left: 0.25rem;
 }
 
 .BasicForm input
 {
   border: 1px solid black;
   padding: 0.25rem;
+  margin-left: 0.25rem;
   width: 8rem;
 }
 
 .BasicForm button
 {
+  background: #E6C4D5;
   border: 1px solid black;
-  display: inline-block;
   padding: 0.25rem;
   width: 100%;
 }
+
+.BasicForm button:hover
+{
+  background: #F6D4E5;
+}
+
 /*----------------------------------------------------------------------------*/
 
 .BasicTable

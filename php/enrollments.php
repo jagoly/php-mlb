@@ -16,94 +16,6 @@ require('include/layout.php');
 
 <div id=Content>
 
-<?php {
-
-//==========================================================================//
-
-jg_dump_pretty_json($_POST, '_POST');
-
-$action = isset($_GET['action']) ? $_GET['action'] : NULL;
-
-if ($action == NULL) {} // don't do anything here
-
-else if ($action == 'update')
-{
-    try
-    {
-        $db = jg_new_database_connection();
-
-        $sql = 'UPDATE Enrollments SET Grade = :Grade WHERE WorkshopID = :WorkshopID AND CustomerID = :CustomerID';
-
-        $args = [ 'WorkshopID' => jg_sane_map_access($_POST, 'WorkshopID'),
-                  'CustomerID' => jg_sane_map_access($_POST, 'CustomerID'),
-                  'Grade' => jg_sane_map_access($_POST, 'Grade') ];
-
-        ( $statement = $db->prepare($sql) ) -> execute($args);
-
-        if ($statement->rowCount() != 0) echo '<p>Successfully updated record.</p>';
-    }
-
-    catch (PDOException $e)
-    {
-        jg_log_exception($e);
-        echo '<p>WARNING: Could not update record.</p>';
-    }
-
-    catch (Exception $e)
-    {
-        jg_log_exception($e);
-        echo '<p>Oops. Something went wrong.</p>';
-    }
-}
-
-else if ($action == 'insert')
-{
-    $rowCount = jg_database_insert_helper
-    (
-        'Enrollments', ['CustomerID', 'WorkshopID', 'Grade'],
-        array_merge($_POST, ['Grade' => ''])
-    );
-
-    if ($rowCount >  0) echo '<p>Successfully inserted record.</p>';
-    if ($rowCount == 0) echo '<p>Could not insert record.</p>';
-    if ($rowCount <  0) echo '<p>Oops. Something went wrong.</p>';
-}
-
-else if ($action == 'delete')
-{
-    try
-    {
-        $db = jg_new_database_connection();
-
-        $sql = 'DELETE FROM Enrollments WHERE CustomerID = :CustomerID AND WorkshopID = :WorkshopID';
-
-        $args = [ 'CustomerID' => jg_sane_map_access($_POST, 'CustomerID'),
-                  'WorkshopID' => jg_sane_map_access($_POST, 'WorkshopID') ];
-
-        ( $statement = $db->prepare($sql) ) -> execute($args);
-
-        if ($statement->rowCount() != 0) echo '<p>Successfully deleted record.</p>';
-    }
-
-    catch (PDOException $e)
-    {
-        jg_log_exception($e);
-        echo '<p>WARNING: Could not delete record.</p>';
-    }
-
-    catch (Exception $e)
-    {
-        jg_log_exception($e);
-        echo '<p>Oops. Something went wrong.</p>';
-    }
-}
-
-else echo "<p>WARNING: Unrecognised action '$action'</p>";
-
-//==========================================================================//
-
-} ?>
-
   <form class=BasicForm action="?action=insert" method="POST">
 
     <legend> Add Enrollment </legend>
@@ -116,6 +28,59 @@ else echo "<p>WARNING: Unrecognised action '$action'</p>";
   </form>
 
 <?php {
+
+//==========================================================================//
+
+//jg_dump_pretty_json($_POST, '_POST');
+
+$action = isset($_GET['action']) ? $_GET['action'] : NULL;
+
+if ($action == NULL) {} // don't do anything here
+
+else if ($action == 'update')
+{
+    $rowCount = jg_database_update_helper
+    (
+        'Enrollments',
+        ['Grade'],
+        ['CustomerID', 'WorkshopID'],
+        $_POST
+    );
+
+    if ($rowCount >  0) echo '<p>Successfully updated record.</p>';
+    if ($rowCount == 0) echo '<p>Could not update record.</p>';
+    if ($rowCount <  0) echo '<p>Oops. Something went wrong.</p>';
+}
+
+else if ($action == 'insert')
+{
+    $rowCount = jg_database_insert_helper
+    (
+        'Enrollments',
+        ['CustomerID', 'WorkshopID', 'Grade'],
+        $_POST + ['Grade' => NULL]
+    );
+
+    if ($rowCount >  0) echo '<p>Successfully inserted record.</p>';
+    if ($rowCount == 0) echo '<p>Could not insert record.</p>';
+    if ($rowCount <  0) echo '<p>Oops. Something went wrong.</p>';
+}
+
+else if ($action == 'delete')
+{
+    $rowCount = jg_database_delete_helper
+    (
+        'Enrollments',
+        ['CustomerID', 'WorkshopID'],
+        $_POST
+    );
+
+    if ($rowCount >  0) echo '<p>Successfully deleted record.</p>';
+    if ($rowCount == 0) echo '<p>Could not delete record.</p>';
+    if ($rowCount <  0) echo '<p>Oops. Something went wrong.</p>';
+}
+
+else echo "<p>WARNING: Unrecognised action '$action'</p>";
 
 //==========================================================================//
 
@@ -157,21 +122,22 @@ try
                     echo "<td>{$row->LastName}</td>";
                     echo "<td>{$row->FirstName}</td>";
 
-                    echo '<td>'; {
-                        echo "<form method='post' action='?action=update'>";
+                    echo "<form method='post' action='?action=update'>";
+                    {
                         echo "<input type='hidden' name='CustomerID' value='{$row->CustomerID}'>";
                         echo "<input type='hidden' name='WorkshopID' value='{$row->WorkshopID}'>";
-                        echo "<input type='text' name='Grade' value='{$row->Grade}'>";
-                        echo "</form>";
-                    } echo '</td>';
 
-                    echo '<td>'; {
-                        echo "<form method='post' action='?action=delete'>";
+                        echo "<td><input type='text' name='Grade' value='{$row->Grade}'></td>";
+                    }
+                    echo "</form>";
+
+                    echo "<form method='post' action='?action=delete'>";
+                    {
                         echo "<input type='hidden' name='CustomerID' value='{$row->CustomerID}'>";
                         echo "<input type='hidden' name='WorkshopID' value='{$row->WorkshopID}'>";
-                        echo "<button title='Delete Record' type='submit'> ⌫ </button>";
-                        echo "</form>";
-                    } echo '</td>';
+                        echo "<td><button title='Delete Record' type='submit'> ⌫ </button></td>";
+                    }
+                    echo "</form>";
                 }
                 echo '</tr>';
             }
