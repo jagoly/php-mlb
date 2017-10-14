@@ -2,7 +2,7 @@ html
 {
   min-width: 480px;
   width:     100%;
-  
+
   box-sizing:  border-box;
   font-family: ubuntu;
 }
@@ -12,13 +12,23 @@ html
   margin:  0;
   padding: 0;
   border:  0;
-  
+
   box-sizing: inherit;
 }
 
+header, footer, #Content
+{
+  width: 1200px;
+  max-width: 100%;
+  margin: 0 auto;
+  background: #728;
+}
+
+/*----------------------------------------------------------------------------*/
+
 body
 {
-  background-color: #C9B;
+  background: #C9B;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -26,33 +36,73 @@ body
 
 header
 {
-  background: #EBD;
-  padding: 10px;
-  width: 100%;
-  margin-bottom: 10px;
+  color: white;
 }
 
-header > #HeaderMain
+ #HeaderTitle
 {
+  background: #A35;
   text-align: center;
+  padding: 20px;
 }
+
+#HeaderNavigation
+{
+  background: #C58;
+  height: 44px;
+  padding: 6px;
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+#HeaderNavigation > nav
+{
+  position: relative;
+  height: 100%;
+  display: block;
+}
+
+#HeaderNavigation > nav > a
+{
+  color: white;
+  transition: background 0.2s;
+  background: #C58;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: right;
+  line-height: 24px;
+  height: 32px;
+  padding: 4px 8px;
+  display: inline-block;
+}
+
+#HeaderNavigation > nav > a:last-child
+{
+  float: right;
+}
+
+#HeaderNavigation > nav > a:hover
+{
+  background: #D69;
+}
+
+.NavMenuRootLayout > .NavMenuItem { margin-right: 6px; }
+
+.NavMenuGroupLayout > .NavMenuItem { margin-top: 6px; }
+
 
 footer
 {
-  background: #EBD;
-  padding: 10px;
-  margin-top: 10px;
-  width: 100%;
-}
-
-footer > #FooterMain
-{
+  color: white;
+  background: #A35;
+  padding: 15px;
   text-align: center;
 }
 
 #Content
 {
-  background: #EBD;
+  background: #DCE;
   width: 1200;
   max-width: 100%;
   margin: 0 auto;
@@ -77,44 +127,75 @@ footer > #FooterMain
     margin: 1rem 0;
 }
 
-.QueryForm
+/*----------------------------------------------------------------------------*/
+
+.BasicForm
 {
   border: 1px solid black;
-  padding: 6px;
-  width: 300px;
+  display: inline-block;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  text-align: right;
 }
 
-.QueryForm > label
+.BasicForm legend
 {
-  float: right;
-  margin-bottom: 6px;
+  font-weight: bold;
+  margin: 0 auto;
+  margin-bottom: 0.5rem;
 }
 
-.QueryForm > label > input
+.BasicForm label
 {
-  border: 1px solid black;
-  padding: 4px;
-  width: 200px;
-}
-
-.QueryForm > button
-{
-  border: 1px solid black;
   display: block;
-  padding: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.BasicForm input
+{
+  border: 1px solid black;
+  padding: 0.25rem;
+  width: 8rem;
+}
+
+.BasicForm button
+{
+  border: 1px solid black;
+  display: inline-block;
+  padding: 0.25rem;
   width: 100%;
 }
+/*----------------------------------------------------------------------------*/
 
-.ResultTable
+.BasicTable
 {
-  background: white;
-  border: 1px solid black;
-  border-collapse: collapse;
+  display: block;
+  table-layout: fixed;
+  border-spacing: 2px;
+  width: 0;
 }
 
-.ResultTable td, .ResultTable th
+.BasicTable td, .BasicTable th
 {
-  border: 1px solid black;
-  padding: 4px;
-  margin: 0;
+  background: white;
+  font-size: 1rem;
+  overflow: hidden;
+  padding: 0.25rem;
+}
+
+.BasicTable input
+{
+  background: none;
+  font-size: 1rem;
+  padding: 0.125rem;
+  margin: -0.125rem;
+  width: calc(100% + 0.25rem);
+}
+
+.BasicTable button
+{
+  background: none;
+  font-size: 1rem;
+  font-weight: bold;
+  width: 100%;
 }

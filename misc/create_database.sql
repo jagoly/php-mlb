@@ -87,7 +87,7 @@ CREATE TABLE `Sales`
   `ProductID` int(8) NOT NULL,
   `Quantity` decimal(4,0) NOT NULL,
   `TotalPrice` decimal(5,2) NOT NULL,
-  `SaleDate` date NOT NULL, 
+  `SaleDate` date NOT NULL,
   PRIMARY KEY (`SaleID`),
   CONSTRAINT `Sales_Customers_FK` FOREIGN KEY (`CustomerID`) REFERENCES `Customers` (`CustomerID`),
   CONSTRAINT `Sales_Products_FK` FOREIGN KEY (`ProductID`) REFERENCES `Products` (`ProductID`)
@@ -100,7 +100,7 @@ CREATE TABLE `Purchases`
   `ProductID` int(8) NOT NULL,
   `Quantity` decimal(4,0) NOT NULL,
   `TotalPrice` decimal(5,2) NOT NULL,
-  `PurchaseDate` date NOT NULL, 
+  `PurchaseDate` date NOT NULL,
   PRIMARY KEY (`PurchaseID`),
   CONSTRAINT `Purchases_Products_FK` FOREIGN KEY (`ProductID`) REFERENCES `Products` (`ProductID`)
 )
@@ -116,14 +116,14 @@ CREATE TABLE `Workshops`
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `Grades`
+CREATE TABLE `Enrollments`
 (
-  `WorkshopID` int(8) NOT NULL AUTO_INCREMENT,
   `CustomerID` int(8) NOT NULL,
-  `Grade` varchar(30) NOT NULL,
-  PRIMARY KEY (`WorkshopID`, `CustomerID`),
-  CONSTRAINT `Grades_Workshops_FK` FOREIGN KEY (`WorkshopID`) REFERENCES `Workshops` (`WorkshopID`),
-  CONSTRAINT `Grades_Customers_FK` FOREIGN KEY (`CustomerID`) REFERENCES `Customers` (`CustomerID`)
+  `WorkshopID` int(8) NOT NULL,
+  `Grade` varchar(30),
+  PRIMARY KEY (`CustomerID`, `WorkshopID`),
+  CONSTRAINT `Grades_Customers_FK` FOREIGN KEY (`CustomerID`) REFERENCES `Customers` (`CustomerID`),
+  CONSTRAINT `Grades_Workshops_FK` FOREIGN KEY (`WorkshopID`) REFERENCES `Workshops` (`WorkshopID`)
 )
 ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -156,3 +156,5 @@ insert into Products ( ProductID, VendorCode, ShortName, StandardPrice ) values 
 insert into Products ( ProductID, VendorCode, ShortName, StandardPrice ) values ( default, '0-399-22690-7', 'The Very Hungry Caterlillar', 19.95 );
 
 insert into Workshops ( WorkshopID, ProductID, WorkshopDate ) values ( default, 1, '2011-06-25' );
+
+insert into Enrollments ( CustomerID, WorkshopID, Grade ) values ( 1, 1, null );

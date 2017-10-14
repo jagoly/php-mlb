@@ -14,7 +14,9 @@ require('include/layout.php');
 
 <div id=Content>
 
-  <form class=QueryForm action="results.php" method="POST">
+  <form class=BasicForm action="results.php" method="POST">
+
+    <legend> Search Customers </legend>
 
     <label> Last Name <input type="text" name="LastName"> </label>
     <label> First Name <input type="text" name="FirstName"> </label>
