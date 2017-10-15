@@ -10,6 +10,12 @@ function jg_new_database_connection()
     $user     = 'root';
     $password = 'password';
 
+    //$host     = 'mysql.cs.rmit.edu.au';
+    //$port     = '4022';
+    //$dbname   = 'MyLifeBalance';
+    //$user     = 's3650387';
+    //$password = 'HNMcFgad';
+
     $pdoAttrs =
     [
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,

@@ -1,46 +1,65 @@
 <?php
 
-require('include/helpers.php');
-require('include/database.php');
-require('include/layout.php');
+//==========================================================================//
 
-?>
+ob_start();
 
-<html>
+require_once('include/database.php');
+require_once('include/helpers.php');
+require_once('include/layout.php');
+require_once('include/session.php');
 
-<body>
+ob_end_clean();
 
-<?php jg_echo_basic_head("My Life Balance | Customers"); ?>
+//==========================================================================//
 
-<?php jg_echo_basic_header("Edit Customers"); ?>
+session_start();
 
-<div id=Content>
+echo '<!DOCTYPE html>';
 
-  <form class=BasicForm action="?action=insert" method="POST">
+echo '<html>';
 
-    <legend> Add Customer </legend>
+define ( 'JG_HEAD_EXTRA', <<< END_RAW_STRING
+  <style>
+    #ResultTable .TableCell:nth-of-type(1) { width: 2rem; }
+    #ResultTable .TableCell:nth-of-type(2) { width: 0; }
+    #ResultTable .TableCell:nth-of-type(3) { width: 8rem; }
+    #ResultTable .TableCell:nth-of-type(4) { width: 8rem; }
+    #ResultTable .TableCell:nth-of-type(5) { width: 12rem; }
+    #ResultTable .TableCell:nth-of-type(6) { width: 2rem; }
+  </style>
+END_RAW_STRING
+);
 
-    <label> Last Name <input type="text" name="LastName"> </label>
-    <label> First Name <input type="text" name="FirstName"> </label>
-    <label> Address <input type="text" name="Address"> </label>
+jg_echo_basic_head('My Life Balance | Customers');
 
-    <button type="insert"> INSERT </button>
+echo '<body>';
 
-  </form>
+jg_echo_basic_header('Edit Customers');
 
-  <form class=BasicForm action="?action=search" method="POST">
+echo '<div id=Content>';
 
-    <legend> Search Customers </legend>
+//==========================================================================//
 
-    <label> Last Name <input type="text" name="LastName"> </label>
-    <label> First Name <input type="text" name="FirstName"> </label>
-    <label> Address <input type="text" name="Address"> </label>
+echo '  <form class=BasicForm action="?action=insert" method="POST">';
+echo '    <fieldset>';
+echo '      <legend> Add Customer </legend>';
+echo '      <label> Last Name <input type="text" name="LastName"> </label>';
+echo '      <label> First Name <input type="text" name="FirstName"> </label>';
+echo '      <label> Address <input type="text" name="Address"> </label>';
+echo '      <button type="submit"> INSERT </button>';
+echo '    </fieldset>';
+echo '  </form>';
 
-    <button type="submit"> SEARCH </button>
-
-  </form>
-
-<?php {
+echo '  <form class=BasicForm action="?action=search" method="POST">';
+echo '    <fieldset>';
+echo '      <legend> Search Customers </legend>';
+echo '      <label> Last Name <input type="text" name="LastName"> </label>';
+echo '      <label> First Name <input type="text" name="FirstName"> </label>';
+echo '      <label> Address <input type="text" name="Address"> </label>';
+echo '      <button type="submit"> SEARCH </button>';
+echo '    </fieldset>';
+echo '  </form>';
 
 //==========================================================================//
 
@@ -135,54 +154,56 @@ try
     if ($action == 'search' && empty($result))
         echo '<p>Search returned no results.</p>';
 
-    echo '<table class=BasicTable>';
+    echo '<div id=ResultTable class=Table>';
     {
-        echo '<colgroup>'; {
-            echo '<col style="width:4rem">';
-            echo '<col style="width:8rem">';
-            echo '<col style="width:8rem">';
-            echo '<col style="width:12rem">';
-            echo '<col style="width:2rem">';
-        } echo '<colgroup>';
-
-        echo '<tbody>';
+        echo '<div class=TableHead>';
         {
-            echo '<tr>'; {
-                echo '<th title="Customers.CustomerID"> ID </th>';
-                echo '<th title="Customers.LastName"> Last Name </th>';
-                echo '<th title="Customers.FirstName"> First Name </th>';
-                echo '<th title="Customers.Address"> Address </th>';
-            } echo '</tr>';
+            echo '<div class=TableRow>';
+            {
+                echo '<div class=TableCell title="Customers.CustomerID"> <span> ID </span> </div>';
+                echo '<div class=TableCell> </div>';
+                echo '<div class=TableCell title="Customers.LastName"> <span> Last Name </span> </div>';
+                echo '<div class=TableCell title="Customers.FirstName"> <span> First Name </span> </div>';
+                echo '<div class=TableCell title="Customers.Address"> <span> Address </span> </div>';
+                echo '<div class=TableCell> </div>';
+            }
+            echo '</div>';
+        }
+        echo '</div>';
 
+        echo '<div class=TableBody>';
+        {
             foreach ($result as $row)
             {
-                echo '<tr>';
+                echo '<div class=TableRow>';
                 {
-                    echo "<td>{$row->CustomerID}</td>";
+                    $updateId = 'update_' . $row->CustomerID;
+                    $deleteId = 'delete_' . $row->CustomerID;
 
-                    echo "<form method='post' action='?action=update'>";
-                    {
+                    echo "<form id=$updateId method='post' action='?action=update'>"; {
                         echo "<input type='hidden' name='CustomerID' value='{$row->CustomerID}'>";
+                    } echo "</form>";
 
-                        echo "<td><input type='text' name='LastName' value='{$row->LastName}'></td>";
-                        echo "<td><input type='text' name='FirstName' value='{$row->FirstName}'></td>";
-                        echo "<td><input type='text' name='Address' value='{$row->Address}'></td>";
-                    }
-                    echo "</form>";
-
-                    echo "<form method='post' action='?action=delete'>";
-                    {
+                    echo "<form id=$deleteId method='post' action='?action=delete'>"; {
                         echo "<input type='hidden' name='CustomerID' value='{$row->CustomerID}'>";
-                        echo "<td><button title='Delete Record' type='submit'> ⌫ </button></td>";
-                    }
-                    echo "</form>";
+                    } echo "</form>";
+
+                    echo '<div class=TableCell> <span>', $row->CustomerID, '</span> </div>';
+
+                    echo '<div class=TableCell>', "<input form=$updateId type='submit' hidefocus='true'>", '</div>';
+
+                    echo '<div class=TableCell>', "<input form=$updateId type='text' name='LastName' value='{$row->LastName}'>", '</div>';
+                    echo '<div class=TableCell>', "<input form=$updateId type='text' name='FirstName' value='{$row->FirstName}'>", '</div>';
+                    echo '<div class=TableCell>', "<input form=$updateId type='text' name='Address' value='{$row->Address}'>", '</div>';
+
+                    echo '<div class=TableCell>', "<button form=$deleteId title='Delete Record' type='submit'> ⌫ </button>", '</div>';
                 }
-                echo '</tr>';
+                echo '</div>';
             }
         }
-        echo '</tbody>';
+        echo '</div>';
     }
-    echo '</table>';
+    echo '</div>';
 }
 
 catch (PDOException $e)
@@ -199,12 +220,12 @@ catch (Exception $e)
 
 //==========================================================================//
 
-} ?>
+echo '</div>';
 
-</div>
+jg_echo_basic_footer();
 
-<?php jg_echo_basic_footer(); ?>
+echo '</body>';
 
-</body>
+echo '</html>';
 
-</html>
+?>

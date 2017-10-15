@@ -4,62 +4,58 @@
 
 function jg_echo_basic_head(String $title)
 {
+    echo '<head>';
 
-echo <<<ENDSTR
+    echo '  <meta charset="UTF-8">';
+    echo '  <title>', $title, '</title>';
 
-<head>
-  <meta charset='UTF-8'>
-  <title>$title</title>
-  <link rel="stylesheet" href="/styles/default.css">
-</head>
+    echo '  <link rel="stylesheet" href="/styles/default.css">';
 
-ENDSTR;
+    if (defined('JG_HEAD_EXTRA')) echo JG_HEAD_EXTRA;
 
+    echo '</head>';
 }
 
 //----------------------------------------------------------------------------//
 
 function jg_echo_basic_header(String $title)
 {
+    echo '<header>';
 
-echo <<<ENDSTR
+    $logInOutText = isset($_SESSION['login']) ? 'LOGOUT' : 'LOGIN';
+    $logInOutAction = isset($_SESSION['login']) ? 'logout' : 'login';
 
-<header>
+    echo '  <div id=HeaderNavigation>';
+    echo '    <nav>';
+    echo '      <div>';
+    echo '        <a href="enrollments.php"> ENROLLMENTS </a>';
+    echo '        <a href="customers.php"> CUSTOMERS </a>';
+    echo '      </div>';
+    echo '      <div>';
+    echo '        <a href=""> MyLifeBalance </a>';
+    echo "        <a href='user.php?action=$logInOutAction'> $logInOutText </a>";
+    echo '      </div>';
+    echo '    </nav>';
+    echo '  </div>';
 
-  <div id=HeaderNavigation>
-    <nav>
-      <a href="enrollments.php">ENROLLMENTS</a>
-      <a href="customers.php">CUSTOMERS</a>
-      <a href="">MyLifeBalance</a>
-    </nav>
+    echo '  <div id=HeaderTitle>';
+    echo '    <h1>', $title, '</h1>';
+    echo '  </div>';
 
-  </div>
-
-  <div id=HeaderTitle>
-    <h1>$title</h1>
-  </div>
-
-</header>
-
-ENDSTR;
-
+    echo '</header>';
 }
 
 //----------------------------------------------------------------------------//
 
 function jg_echo_basic_footer()
 {
+    echo '<footer>';
 
-echo <<<ENDSTR
+    echo '  <div id=FooterMain>';
+    echo '    <p>footer stuff goes here</p>';
+    echo '  </div>';
 
-<footer>
-  <div id=FooterMain>
-    <p>footer stuff goes here</p>
-  </div>
-</footer>
-
-ENDSTR;
-
+    echo '</footer>';
 }
 
 //----------------------------------------------------------------------------//

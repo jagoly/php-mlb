@@ -1,33 +1,55 @@
 <?php
 
-require('include/helpers.php');
-require('include/database.php');
-require('include/layout.php');
+//==========================================================================//
 
-?>
+ob_start();
 
-<html>
+require_once('include/database.php');
+require_once('include/helpers.php');
+require_once('include/layout.php');
+require_once('include/session.php');
 
-<body>
+ob_end_clean();
 
-<?php jg_echo_basic_head("My Life Balance | Enrollments"); ?>
+//==========================================================================//
 
-<?php jg_echo_basic_header("Edit Enrollments"); ?>
+session_start();
 
-<div id=Content>
+echo '<!DOCTYPE html>';
 
-  <form class=BasicForm action="?action=insert" method="POST">
+echo '<html>';
 
-    <legend> Add Enrollment </legend>
+define ( 'JG_HEAD_EXTRA', <<< END_RAW_STRING
+  <style>
+    #ResultTable .TableCell:nth-of-type(1) { width: 3.5rem; }
+    #ResultTable .TableCell:nth-of-type(2) { width: 3.5rem; }
+    #ResultTable .TableCell:nth-of-type(3) { width: 0; }
+    #ResultTable .TableCell:nth-of-type(4) { width: 8rem; }
+    #ResultTable .TableCell:nth-of-type(5) { width: 8rem; }
+    #ResultTable .TableCell:nth-of-type(6) { width: 6rem; }
+    #ResultTable .TableCell:nth-of-type(7) { width: 2rem; }
+  </style>
+END_RAW_STRING
+);
 
-    <label> Customer <input type="text" name="CustomerID"> </label>
-    <label> Workshop <input type="text" name="WorkshopID"> </label>
+jg_echo_basic_head('My Life Balance | Enrollments');
 
-    <button type="insert"> INSERT </button>
+echo '<body>';
 
-  </form>
+jg_echo_basic_header("Edit Enrollments");
 
-<?php {
+echo '<div id=Content>';
+
+//==========================================================================//
+
+echo '  <form class=BasicForm action="?action=insert" method="POST">';
+echo '    <fieldset>';
+echo '      <legend> Add Enrollment </legend>';
+echo '        <label> Customer <input type="text" name="CustomerID"> </label>';
+echo '        <label> Workshop <input type="text" name="WorkshopID"> </label>';
+echo '        <button type="submit"> INSERT </button>';
+echo '      </fieldset>';
+echo '  </form>';
 
 //==========================================================================//
 
@@ -92,59 +114,61 @@ try
                           'FROM Workshops AS W, Customers AS C, Enrollments AS E ' .
                           'WHERE W.WorkshopID = E.WorkshopID AND C.CustomerID = E.CustomerID' );
 
-    echo '<table class=BasicTable>';
+    echo '<div id=ResultTable class=Table>';
     {
-        echo '<colgroup>'; {
-            echo '<col style="width:4rem">';
-            echo '<col style="width:4rem">';
-            echo '<col style="width:8rem">';
-            echo '<col style="width:8rem">';
-            echo '<col style="width:6rem">';
-            echo '<col style="width:2rem">';
-        } echo '<colgroup>';
-
-        echo '<tbody>';
+        echo '<div class=TableHead>';
         {
-            echo '<tr>'; {
-                echo '<th title="Workshops.WorkshopID"> W. ID </th>';
-                echo '<th title="Customers.CustomerID"> C. ID </th>';
-                echo '<th title="Customers.LastName"> Last Name </th>';
-                echo '<th title="Customers.FirstName"> First Name </th>';
-                echo '<th title="Enrollments.Grade"> Grade </th>';
-            } echo '</tr>';
+            echo '<div class=TableRow>';
+            {
+                echo '<div class=TableCell title="Workshops.WorkshopID"> <span> W. ID </span> </div>';
+                echo '<div class=TableCell title="Customers.CustomerID"> <span> C. ID </span> </div>';
+                echo '<div class=TableCell> </div>';
+                echo '<div class=TableCell title="Customers.LastName"> <span> Last Name </span> </div>';
+                echo '<div class=TableCell title="Customers.FirstName"> <span> First Name </span> </div>';
+                echo '<div class=TableCell title="Enrollments.Grade"> <span> Grade </span> </div>';
+                echo '<div class=TableCell> </div>';
+            }
+            echo '</div>';
+        }
+        echo '</div>';
 
+        echo '<div class=TableBody>';
+        {
             foreach ($result as $row)
             {
-                echo '<tr>';
+                echo '<div class=TableRow>';
                 {
-                    echo "<td>{$row->WorkshopID}</td>";
-                    echo "<td>{$row->CustomerID}</td>";
-                    echo "<td>{$row->LastName}</td>";
-                    echo "<td>{$row->FirstName}</td>";
+                    $updateId = 'update_' . $row->WorkshopID . '_' . $row->CustomerID;
+                    $deleteId = 'delete_' . $row->WorkshopID . '_' . $row->CustomerID;
 
-                    echo "<form method='post' action='?action=update'>";
-                    {
+                    echo "<form id=$updateId method='post' action='?action=update'>"; {
                         echo "<input type='hidden' name='CustomerID' value='{$row->CustomerID}'>";
                         echo "<input type='hidden' name='WorkshopID' value='{$row->WorkshopID}'>";
+                    } echo "</form>";
 
-                        echo "<td><input type='text' name='Grade' value='{$row->Grade}'></td>";
-                    }
-                    echo "</form>";
-
-                    echo "<form method='post' action='?action=delete'>";
-                    {
+                    echo "<form id=$deleteId method='post' action='?action=delete'>"; {
                         echo "<input type='hidden' name='CustomerID' value='{$row->CustomerID}'>";
                         echo "<input type='hidden' name='WorkshopID' value='{$row->WorkshopID}'>";
-                        echo "<td><button title='Delete Record' type='submit'> ⌫ </button></td>";
-                    }
-                    echo "</form>";
+                    } echo "</form>";
+
+                    echo '<div class=TableCell> <span>', $row->WorkshopID, '</span> </div>';
+                    echo '<div class=TableCell> <span>', $row->CustomerID, '</span> </div>';
+
+                    echo '<div class=TableCell>', "<input form=$updateId type='submit' hidefocus='true'>", '</div>';
+
+                    echo '<div class=TableCell> <span>', $row->LastName, '</span> </div>';
+                    echo '<div class=TableCell> <span>', $row->FirstName, '</span> </div>';
+
+                    echo '<div class=TableCell>', "<input form=$updateId type='text' name='Grade' value='{$row->Grade}'>", '</div>';
+
+                    echo '<div class=TableCell>', "<button form=$deleteId title='Delete Record' type='submit'> ⌫ </button>", '</div>';
                 }
-                echo '</tr>';
+                echo '</div>';
             }
         }
-        echo '</tbody>';
+        echo '</div>';
     }
-    echo '</table>';
+    echo '</div>';
 }
 
 catch (PDOException $e)
@@ -161,12 +185,12 @@ catch (Exception $e)
 
 //==========================================================================//
 
-} ?>
+echo '</div>';
 
-</div>
+jg_echo_basic_footer();
 
-<?php jg_echo_basic_footer(); ?>
+echo '</body>';
 
-</body>
+echo '</html>';
 
-</html>
+?>
